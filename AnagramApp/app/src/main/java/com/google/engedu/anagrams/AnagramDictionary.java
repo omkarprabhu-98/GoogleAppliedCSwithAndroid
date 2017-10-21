@@ -38,22 +38,29 @@ public class AnagramDictionary {
     private ArrayList<String> wordList;
     private HashMap<String, ArrayList<String>> lettersToWord;
     private HashSet<String> wordSet;
+    private HashMap<Integer, ArrayList<String>> sizeToWords;
+
+    private int wordLength = DEFAULT_WORD_LENGTH;
+    private int count = 0;
 
     public AnagramDictionary(Reader reader) throws IOException {
         BufferedReader in = new BufferedReader(reader);
         String line;
+
         // objects for data structures created
         wordList = new ArrayList<String>();
         lettersToWord = new HashMap<String, ArrayList<String>>();
         wordSet = new HashSet<String>();
-
+        sizeToWords = new HashMap<Integer, ArrayList<String>>();
 
         while((line = in.readLine()) != null) {
             String word = line.trim();
+            // fill wordList
             wordList.add(word);
+            // fill wordSet
             wordSet.add(word);
 
-            // fill the Hash Map for storing all permutations of q work
+            // fill the Hash Map for storing all permutations of all words
             ArrayList<String> tmpList = new ArrayList<>();
             String sortedWord = sortLetters(word);
             if(lettersToWord.containsKey(sortedWord)){
@@ -64,6 +71,20 @@ public class AnagramDictionary {
             else{
                 tmpList.add(word);
                 lettersToWord.put(sortedWord, tmpList);
+            }
+
+            // fill the Hash Map for storing array of words of a their length as key
+            ArrayList<String> tmpList1 = new ArrayList<>();
+            int i = word.length();
+
+            if(sizeToWords.containsKey(i)){
+                tmpList1 = lettersToWord.get(sortedWord);
+                tmpList1.add(word);
+                sizeToWords.put(i, tmpList1);
+            }
+            else{
+                tmpList1.add(word);
+                sizeToWords.put(i, tmpList1);
             }
 
         }
@@ -85,17 +106,21 @@ public class AnagramDictionary {
         return result;
     }
 
+    // get a arrayList of anagrams for the word
     public List<String> getAnagramsWithOneMoreLetter(String word) {
         ArrayList<String> result = new ArrayList<String>();
 
         ArrayList<String> anagramsWithOneMoreLetter = new ArrayList<String>();
 
-        Log.d("Tag", "IN");
+//        Log.d("Tag", "IN");
+        // generate anagrams list
         for (char alph = 'a'; alph <= 'z'; ++alph){
-
+            // add a character to the word
             String oneMoreLetterWord = word + alph;
+            // get the sorted string for the oneMoreLetterWord
             String sortedWordWithOneMoreLetter = sortLetters(oneMoreLetterWord);
 
+            // fill all permutations of oneMoreLetterWord from Hash Map lettersToWords in result List
             if (lettersToWord.containsKey(sortedWordWithOneMoreLetter)){
 
                 anagramsWithOneMoreLetter = lettersToWord.get(sortedWordWithOneMoreLetter);
@@ -112,11 +137,35 @@ public class AnagramDictionary {
 
     }
 
+
+    // pick a good starting word
     public String pickGoodStarterWord() {
-        return "badge";
+
+        String starterWord = "badge";
+
+        do {
+
+            if(sizeToWords.get(wordLength).size() > count){
+
+                starterWord = sizeToWords.get(wordLength).get(count);
+                Log.d("Word", starterWord);
+                count++;
+            }
+            else{
+                wordLength++;
+                count = 0;
+            }
+
+            if(getAnagramsWithOneMoreLetter(starterWord).size() !=  0) {
+                break;
+            }
+
+        }while(true);
+
+        return starterWord;
     }
 
-    // sort the string's characters
+    // sort the word's characters
     public String sortLetters(String word) {
         char[] characters = word.toCharArray();
         Arrays.sort(characters);
