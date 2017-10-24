@@ -142,7 +142,6 @@ public class AnagramDictionary {
     public String pickGoodStarterWord() {
 
         String starterWord = "badge";
-
         do {
 
             if(sizeToWords.get(wordLength).size() > count){
