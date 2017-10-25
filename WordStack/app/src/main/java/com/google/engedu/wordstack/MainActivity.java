@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private Random random = new Random();
     private StackedLayout stackedLayout;
     private String word1, word2;
+    private Stack<View> placedTiles;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,11 +90,7 @@ public class MainActivity extends AppCompatActivity {
                     TextView messageBox = (TextView) findViewById(R.id.message_box);
                     messageBox.setText(word1 + " " + word2);
                 }
-                /**
-                 **
-                 **  YOUR CODE GOES HERE
-                 **
-                 **/
+                placedTiles.push(tile);
                 return true;
             }
             return false;
@@ -143,16 +141,23 @@ public class MainActivity extends AppCompatActivity {
         TextView messageBox = (TextView) findViewById(R.id.message_box);
         messageBox.setText("Game started");
 
+        // clear word1 layout
         View word1LinearLayout = findViewById(R.id.word1);
         if(((LinearLayout) word1LinearLayout).getChildCount() > 0)
             ((LinearLayout) word1LinearLayout).removeAllViews();
 
+        // clear word2 layout
         View word2LinearLayout = findViewById(R.id.word2);
         if(((LinearLayout) word2LinearLayout).getChildCount() > 0)
             ((LinearLayout) word2LinearLayout).removeAllViews();
 
+        // clear stackLayout
         stackedLayout.clear();
 
+        //placed tiles stack
+        placedTiles = new Stack<>();
+
+        // get 2 words at random
         int wordsLength = words.size();
         word1 = words.get(random.nextInt(wordsLength));
         char[] cword1 = word1.toCharArray();
@@ -203,12 +208,16 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
+
     public boolean onUndo(View view) {
-        /**
-         **
-         **  YOUR CODE GOES HERE
-         **
-         **/
+
+        if(!placedTiles.empty()){
+            View tile = placedTiles.pop();
+            LetterTile tileUndo = (LetterTile) tile;
+            tileUndo.moveToViewGroup(stackedLayout);
+        }
+
         return true;
     }
 }
