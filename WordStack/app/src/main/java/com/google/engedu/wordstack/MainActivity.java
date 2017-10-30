@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             String line = null;
             while((line = in.readLine()) != null) {
                 String word = line.trim();
-                if(word.length() == WORD_LENGTH){
+                if(word.length() <= WORD_LENGTH){
                     words.add(word);
                 }
             }
@@ -72,11 +72,11 @@ public class MainActivity extends AppCompatActivity {
         verticalLayout.addView(stackedLayout, 3);
 
         View word1LinearLayout = findViewById(R.id.word1);
-        word1LinearLayout.setOnTouchListener(new TouchListener());
-        //word1LinearLayout.setOnDragListener(new DragListener());
+//        word1LinearLayout.setOnTouchListener(new TouchListener());
+        word1LinearLayout.setOnDragListener(new DragListener());
         View word2LinearLayout = findViewById(R.id.word2);
-        word2LinearLayout.setOnTouchListener(new TouchListener());
-        //word2LinearLayout.setOnDragListener(new DragListener());
+//        word2LinearLayout.setOnTouchListener(new TouchListener());
+        word2LinearLayout.setOnDragListener(new DragListener());
     }
 
     private class TouchListener implements View.OnTouchListener {
@@ -126,11 +126,8 @@ public class MainActivity extends AppCompatActivity {
                         TextView messageBox = (TextView) findViewById(R.id.message_box);
                         messageBox.setText(word1 + " " + word2);
                     }
-                    /**
-                     **
-                     **  YOUR CODE GOES HERE
-                     **
-                     **/
+                    // add tile to placed tiles stack for undo action
+                    placedTiles.push(tile);
                     return true;
             }
             return false;
@@ -163,16 +160,17 @@ public class MainActivity extends AppCompatActivity {
         char[] cword1 = word1.toCharArray();
         word2 = words.get(random.nextInt(wordsLength));
         char[] cword2 = word2.toCharArray();
+        int len1 = word1.length();
+        int len2 =  word2.length();
 
-        char[] cscString = new char[2*WORD_LENGTH];
+        char[] cscString = new char[len1 + len2];
 
 
         Log.d("Words", word1);
         Log.d("Words", word2);
 
         // scramble words
-        int len1 = word1.length();
-        int len2 =  word2.length();
+
         int i = 0, j = 0, k = 0;
         while(i < len1 && j < len2){
             int randomPick = random.nextInt(2);
@@ -209,12 +207,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     public boolean onUndo(View view) {
-
+        // check if placed tile is not empty
         if(!placedTiles.empty()){
+            // pop the last tile from it
             View tile = placedTiles.pop();
+            // typecast to letter tile object
             LetterTile tileUndo = (LetterTile) tile;
+            // move to stacked layout view group
             tileUndo.moveToViewGroup(stackedLayout);
         }
 

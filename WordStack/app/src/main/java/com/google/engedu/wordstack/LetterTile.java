@@ -22,7 +22,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class LetterTile extends TextView {
@@ -68,11 +67,15 @@ public class LetterTile extends TextView {
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        /**
-         **
-         **  YOUR CODE GOES HERE
-         **
-         **/
+        // event listener to the tile
+        if(!frozen){
+            // if the tile is made to move
+            if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                // start drag
+                startDrag(ClipData.newPlainText("", ""), new View.DragShadowBuilder(this), this, 0);
+                return true;
+            }
+        }
         return super.onTouchEvent(motionEvent);
     }
 }
