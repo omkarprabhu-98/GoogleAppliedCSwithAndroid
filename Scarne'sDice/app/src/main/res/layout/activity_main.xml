@@ -49,6 +49,7 @@
             android:layout_weight="2"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/userScoreText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="0"
@@ -56,6 +57,7 @@
                 android:textSize="24sp"
                 android:layout_margin="4dp"/>
             <TextView
+                android:id="@+id/compScoreText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="0"
@@ -85,6 +87,7 @@
         android:layout_weight="1"
         >
         <Button
+            android:id="@+id/roll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -92,17 +95,19 @@
             android:text="ROLL"
             android:textColor="#fff"
             android:background="#039BE5"
-            android:onClick="roll"
             />
         <Button
+            android:id="@+id/hold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="4dp"
             android:text="HOLD"
             android:textColor="#fff"
-            android:background="#039BE5"/>
+            android:background="#039BE5"
+            />
         <Button
+            android:id="@+id/reset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -110,7 +115,7 @@
             android:text="RESET"
             android:textColor="#fff"
             android:background="#039BE5"
-            android:onClick="reset"/>
+            />
     </LinearLayout>
 
 </LinearLayout>
