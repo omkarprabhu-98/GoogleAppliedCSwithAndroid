@@ -64,6 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="16dp"
+            android:id="@+id/restart"
             android:layout_margin="32dp"
             android:background="#039BE5"
             android:text="RESTART"

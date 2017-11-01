@@ -44,10 +44,12 @@ public class SimpleDictionary implements GhostDictionary {
 
     @Override
     public String getAnyWordStartingWith(String prefix) {
+        // if no word Fragment pick a random word
         if(prefix == null){
             int randomPosition = random.nextInt(words.size());
             return words.get(randomPosition);
         }
+        // search for the word containing the word Fragment
         else{
             int res = binarySearch(prefix);
             if(res == -1){
@@ -66,6 +68,7 @@ public class SimpleDictionary implements GhostDictionary {
         return selected;
     }
 
+    // Binary search for the word containing x in words dictionary
     private int binarySearch(String x) {
         int low = 0;
         int high = words.size() - 1;
@@ -78,10 +81,10 @@ public class SimpleDictionary implements GhostDictionary {
                 return mid;
             }
             if(words.get(mid).compareTo(x) > 0){
-                low = mid + 1;
+                high = mid - 1;
             }
             else{
-                high = mid - 1;
+                low = mid + 1;
             }
 
         }

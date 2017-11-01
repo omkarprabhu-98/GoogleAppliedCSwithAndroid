@@ -18,10 +18,12 @@ package com.google.engedu.ghost;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,8 @@ import static com.google.engedu.ghost.R.id.gameStatus;
 public class GhostActivity extends AppCompatActivity {
     private static final String COMPUTER_TURN = "Computer's turn";
     private static final String USER_TURN = "Your turn";
+    private static final String LOSE = "You lose :( , Please press restart to play a new game :)";
+    private static final String WIN = "You win!!, Please press restart to play a new game :)";
     private GhostDictionary dictionary;
     private boolean userTurn = false;
     private Random random = new Random();
@@ -53,6 +57,15 @@ public class GhostActivity extends AppCompatActivity {
             toast.show();
         }
         onStart(null);
+
+        Button restart = (Button) findViewById(R.id.restart);
+        // listen for click on restart button
+        restart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onStart(null);
+            }
+        });
     }
 
     @Override
@@ -98,30 +111,58 @@ public class GhostActivity extends AppCompatActivity {
     }
 
     private void computerTurn() {
+
+        // status text view object
         TextView label = (TextView) findViewById(gameStatus);
 
-        // Do computer turn stuff then make it the user's turn again
+        int win = 0;
+
+        // computers turn
+
         TextView text = (TextView) findViewById(R.id.ghostText);
         String wordFragment = text.getText().toString();
-        if (sDictionary.isWord(wordFragment)){
-            if(wordFragment.length() >= 4){
-                label.setText("YOU WIN!");
-            }
+
+
+        // try to find if the word fragment exists and has length greater than 4
+        // this ensures that computer is challenging the user and winning the game if user enter a meaningful word
+        if (sDictionary.isWord(wordFragment) && wordFragment.length() >= 4){
+                // user loses if he enters a meaningful word
+                win = 1;
         }
         else{
+            // try to find if such a word Fragment exists in a word in the dictionary
+            // if word Fragment is empty the fill it with a random word (computers turn first)
             String anyWordStartingWith = sDictionary.getAnyWordStartingWith(wordFragment);
+
+            // if word Fragment doesn't exist then user is trying to fool the computer
             if(anyWordStartingWith == null){
-                label.setText("YOU LOSE!");
+                // computer wins by declaring than this word doesn't exist
+//                Log.d("Turn", "Oout");
+                win = 1;
+
             }
+            // if such a word Fragment exists in a word in the dictionary
             else{
+                // add next character to the word
                 int index = wordFragment.length();
                 wordFragment += Character.toString(anyWordStartingWith.charAt(index));
                 text.setText(wordFragment);
+//                Log.d("Turn", "In");
+//                Log.d("Word", anyWordStartingWith);
             }
         }
+        Log.d("Turn", "Computer done");
+        Log.d("Word", wordFragment);
 
-        userTurn = true;
-        label.setText(USER_TURN);
+        // check status of the game
+        if(win == 1){
+            label.setText(LOSE);
+        }
+        else{
+            userTurn = true;
+            label.setText(USER_TURN);
+        }
+
     }
 
     /**
@@ -133,29 +174,25 @@ public class GhostActivity extends AppCompatActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
 
+        // get which character is pressed
         char pressedKey = (char) event.getUnicodeChar();
 
+        // if key pressed is a alphabet then add to word Fragment
         if((pressedKey >= 'a' && pressedKey <= 'z')|| (pressedKey >= 'A' && pressedKey <= 'Z')){
             TextView text = (TextView) findViewById(R.id.ghostText);
             String wordFragment = text.getText().toString();
             wordFragment += Character.toString(pressedKey);
             text.setText(wordFragment);
-            if (sDictionary.isWord(wordFragment)){
-                TextView gameStatus = (TextView) findViewById(R.id.gameStatus);
-                gameStatus.setText("GAME OVER! YOU LOSE");
-            }
-            else{
-                computerTurn();
-            }
 
+//          Log.d("Turn", "Computer called");
+            computerTurn();
 
 
         }
+        // anything other than alphabet then do nothing
         else{
             return super.onKeyUp(keyCode, event);
         }
-
-
 
         return true;
     }

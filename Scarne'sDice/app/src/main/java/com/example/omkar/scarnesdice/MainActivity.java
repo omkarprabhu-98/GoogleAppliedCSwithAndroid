@@ -7,12 +7,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Handler;
 
 import java.util.Random;
 
+
 public class MainActivity extends AppCompatActivity {
 
-    // Data varibles
+    // Data variables for the game
     private int userScore = 0;
     private int compScore = 0;
     private int userTurnValue = 0;
@@ -27,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
     Button reset;
     TextView userScoreText;
     TextView compScoreText;
+
+    // handller for adding delay
+    private Handler handler = new Handler();
 
 
     @Override
@@ -77,12 +82,20 @@ public class MainActivity extends AppCompatActivity {
         // add to image view
         diceImage.setImageResource(this.getResources().getIdentifier(diceNo, "drawable", this.getPackageName()));
 
-        // check whose turn it is
+        // check is dice is 1
         if(diceValue == 1){
             userTurnValue = 0;
-            computersTurn();
+            // wait for s1 sec and then call computers Turn
+            Toast.makeText(getApplicationContext(), "You rolled 1! No points added", Toast.LENGTH_LONG).show();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    computersTurn();
+                }
+            }, 1000);
         }
         else{
+            // add diceValue to userTurn
             userTurnValue += diceValue;
         }
 
@@ -95,30 +108,49 @@ public class MainActivity extends AppCompatActivity {
      */
     public void hold(){
 
+        // hold value (add userTurn value to userScore) and switch to computer turn
         userScore += userTurnValue;
         userScoreText.setText(String.valueOf(userScore));
         userTurnValue = 0;
-        computersTurn();
 
-
-        if(userScore >= 100){
-            // Winning message
-            Toast.makeText(getApplicationContext(), "GAME OVER YOU WON!", Toast.LENGTH_LONG).show();
-            reset();
-        }
-        else if(compScore >= 100){
-            // Winning message
-            Toast.makeText(getApplicationContext(), "GAME OVER YOU LOOSE!", Toast.LENGTH_LONG).show();
-            reset();
+        // check if user has points greater than 100
+        if(checkGameStatus() == 0){
+            // wait for 1 sec and call computers turn
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    computersTurn();
+                }
+            }, 1000);
         }
 
     }
 
     /**
+     * Checks if players score have crossed 100 points
+     */
+    public int checkGameStatus(){
+        if(userScore >= 100){
+            // Winning message
+            Toast.makeText(getApplicationContext(), "GAME OVER YOU WON!", Toast.LENGTH_LONG).show();
+            reset();
+            return 1;
+        }
+        else if(compScore >= 100){
+            // Winning message
+            Toast.makeText(getApplicationContext(), "GAME OVER YOU LOOSE!", Toast.LENGTH_LONG).show();
+            reset();
+            return 1;
+        }
+        return 0;
+    }
+
+
+    /**
      * Reset the game
      */
     public void reset(){
-
+        // reset game variables
         userScore = 0;
         compScore = 0;
         diceImage.setImageResource(this.getResources().getIdentifier("dice1", "drawable", this.getPackageName()));
@@ -134,10 +166,11 @@ public class MainActivity extends AppCompatActivity {
      */
     public void computersTurn() {
 
-        // diable buttons
+        // disable buttons as computers turn now
         roll.setEnabled(false);
         hold.setEnabled(false);
 
+        // computer rolls and hold
         int randomTimesRoll = random.nextInt(5);
         int i = 0;
         while (i <= randomTimesRoll){
@@ -152,10 +185,10 @@ public class MainActivity extends AppCompatActivity {
             else{
                 compTurnValue += diceValue;
             }
-
             i++;
         }
 
+        // get dice no
         String diceNo = "dice";
         diceNo = diceNo + diceValue;
         // add to image view
@@ -164,6 +197,8 @@ public class MainActivity extends AppCompatActivity {
         compScore += compTurnValue;
         compScoreText.setText(String.valueOf(compScore));
         compTurnValue = 0;
+
+        checkGameStatus();
 
         // enable button as turn is over
         roll.setEnabled(true);
