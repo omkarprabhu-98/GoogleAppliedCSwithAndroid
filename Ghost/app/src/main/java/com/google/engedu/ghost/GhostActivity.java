@@ -37,7 +37,9 @@ import static com.google.engedu.ghost.R.id.gameStatus;
 public class GhostActivity extends AppCompatActivity {
     private static final String COMPUTER_TURN = "Computer's turn";
     private static final String USER_TURN = "Your turn";
-    private static final String LOSE = "You lose :( , Please press restart to play a new game :)";
+    private static final String LOSE_INVALID = "You lose :( as no word can be formed from this, Please press restart to play a new game :)";
+    private static final String LOSE_CORRECT = "You lose :( as this word exists, Please press restart to play a new game :)";
+    private static final String LOSE_GUESS = "You lose :( as a valid word can be formed from this, Please press restart to play a new game :)";
     private static final String WIN = "You win!!, Please press restart to play a new game :)";
     private GhostDictionary dictionary;
     private boolean userTurn = false;
@@ -107,9 +109,42 @@ public class GhostActivity extends AppCompatActivity {
             label.setText(COMPUTER_TURN);
             computerTurn();
         }
+
         return true;
     }
 
+    /**
+     * Handler for the "Challenge" button
+     * If word Fragment now can generate a valid word then users challenge is valid
+     *
+     */
+    public void challenge(View v) {
+
+        // status text view object
+        TextView label = (TextView) findViewById(gameStatus);
+
+        // handles when user presses challenge button
+        TextView text = (TextView) findViewById(R.id.ghostText);
+        String wordFragment = text.getText().toString();
+        if (wordFragment.length() >= 4 && sDictionary.isWord(wordFragment)){
+            label.setText(WIN);
+        } else {
+            // try to find a valid word which can be creates using this word
+            String anyWordStartingWith = sDictionary.getAnyWordStartingWith(wordFragment);
+            // if word exists then user loses the challenge as a word can be made
+            if (anyWordStartingWith != null){
+                label.setText(LOSE_GUESS);
+            }
+            // word cannot be made user wins
+            else {
+                label.setText(WIN);
+            }
+        }
+    }
+
+    /**
+     * Simulates computer turn
+     */
     private void computerTurn() {
 
         // status text view object
@@ -138,8 +173,7 @@ public class GhostActivity extends AppCompatActivity {
             if(anyWordStartingWith == null){
                 // computer wins by declaring than this word doesn't exist
 //                Log.d("Turn", "Oout");
-                win = 1;
-
+                win = 2;
             }
             // if such a word Fragment exists in a word in the dictionary
             else{
@@ -156,7 +190,10 @@ public class GhostActivity extends AppCompatActivity {
 
         // check status of the game
         if(win == 1){
-            label.setText(LOSE);
+            label.setText(LOSE_CORRECT);
+        }
+        else if(win == 2){
+            label.setText(LOSE_INVALID);
         }
         else{
             userTurn = true;

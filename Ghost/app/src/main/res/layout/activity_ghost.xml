@@ -57,7 +57,8 @@
             android:layout_margin="32dp"
             android:background="#039BE5"
             android:text="CHALLENGE"
-            android:textColor="#fff"/>
+            android:textColor="#fff"
+            android:onClick="challenge"/>
 
         <Button
             android:layout_width="wrap_content"
