@@ -1,0 +1,47 @@
+[33mcommit b67eb0a581268d7be886354392a724fd30eaf616[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Omkar Prabhu <omkkarprabuinfinity@gmail.com>
+Date:   Wed Nov 1 22:03:17 2017 +0530
+
+    Ghost functionality completed
+
+[33mcommit 522400ea496c6316be38972d848f5b8ef9fde655[m
+Author: Omkar Prabhu <omkkarprabuinfinity@gmail.com>
+Date:   Wed Nov 1 13:33:22 2017 +0530
+
+    Scarne's dice ux improvements + Ghost app computer turn completed
+
+[33mcommit 3414d01e1f3412b5a86cf3c96e6ace9a3f413014[m
+Author: Omkar Prabhu <omkkarprabuinfinity@gmail.com>
+Date:   Mon Oct 30 21:34:54 2017 +0530
+
+    Scarne'sDice implementation completed and Ghost App started code added
+
+[33mcommit 5348e2305b5060020e7966847c3fd7239e263299[m
+Author: Omkar Prabhu <omkkarprabuinfinity@gmail.com>
+Date:   Mon Oct 30 13:02:19 2017 +0530
+
+    WordStack completed and Scarne'sDice starter code added
+
+[33mcommit a9067220c085ad15bdec12f682019c15037a1bd5[m
+Author: Omkar Prabhu <omkkarprabuinfinity@gmail.com>
+Date:   Wed Oct 25 23:28:29 2017 +0530
+
+    Anagrams App completed
+
+[33mcommit dbc72de0a391475f4daa453327a2f7b6aea53b87[m
+Author: Omkar Prabhu <omkkarprabuinfinity@gmail.com>
+Date:   Tue Oct 24 19:31:35 2017 +0530
+
+    WordStack basic functionality added
+
+[33mcommit 1cb4b8f7dd04cdd4290351ff7992ab2589479664[m
+Author: Omkar Prabhu <omkkarprabuinfinity@gmail.com>
+Date:   Sat Oct 21 11:26:00 2017 +0530
+
+    More more letter anagram added
+
+[33mcommit 3b01f4bdea6f679dffbf2025331409217c1a85a8[m
+Author: Omkar Prabhu <omkkarprabuinfinity@gmail.com>
+Date:   Thu Oct 19 00:31:52 2017 +0530
+
+    Anagrams App basic functionality completed

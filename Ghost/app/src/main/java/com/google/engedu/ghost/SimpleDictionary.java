@@ -46,7 +46,6 @@ public class SimpleDictionary implements GhostDictionary {
     public String getAnyWordStartingWith(String prefix) {
         // if no word Fragment pick a random word
         if(prefix == null || prefix.equals("")){
-
             return words.get(random.nextInt(words.size()));
         }
         // search for the word containing the word Fragment
@@ -58,7 +57,6 @@ public class SimpleDictionary implements GhostDictionary {
             else{
                 return words.get(res);
             }
-
         }
     }
 

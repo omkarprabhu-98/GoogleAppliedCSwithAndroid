@@ -45,6 +45,7 @@ public class GhostActivity extends AppCompatActivity {
     private boolean userTurn = false;
     private Random random = new Random();
     private SimpleDictionary sDictionary;
+    private FastDictionary fDictionary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,8 @@ public class GhostActivity extends AppCompatActivity {
         AssetManager assetManager = getAssets();
         try {
             InputStream inputStream = assetManager.open("words.txt");
-            sDictionary = new SimpleDictionary(inputStream);
+//            sDictionary = new SimpleDictionary(inputStream);
+            fDictionary = new FastDictionary(inputStream);
         } catch (IOException e) {
             Toast toast = Toast.makeText(this, "Could not load dictionary", Toast.LENGTH_LONG);
             toast.show();
@@ -99,7 +101,7 @@ public class GhostActivity extends AppCompatActivity {
      * @return true
      */
     public boolean onStart(View view) {
-        userTurn = random.nextBoolean();
+        userTurn =  random.nextBoolean();
         TextView text = (TextView) findViewById(R.id.ghostText);
         text.setText("");
         TextView label = (TextView) findViewById(gameStatus);
@@ -126,11 +128,12 @@ public class GhostActivity extends AppCompatActivity {
         // handles when user presses challenge button
         TextView text = (TextView) findViewById(R.id.ghostText);
         String wordFragment = text.getText().toString();
-        if (wordFragment.length() >= 4 && sDictionary.isWord(wordFragment)){
+
+        if (wordFragment.length() >= 4 && fDictionary.isWord(wordFragment)){
             label.setText(WIN);
         } else {
             // try to find a valid word which can be creates using this word
-            String anyWordStartingWith = sDictionary.getAnyWordStartingWith(wordFragment);
+            String anyWordStartingWith = fDictionary.getAnyWordStartingWith(wordFragment);
             // if word exists then user loses the challenge as a word can be made
             if (anyWordStartingWith != null){
                 label.setText(LOSE_GUESS);
@@ -160,14 +163,15 @@ public class GhostActivity extends AppCompatActivity {
 
         // try to find if the word fragment exists and has length greater than 4
         // this ensures that computer is challenging the user and winning the game if user enter a meaningful word
-        if (sDictionary.isWord(wordFragment) && wordFragment.length() >= 4){
+        if (wordFragment.length() >= 4 && fDictionary.isWord(wordFragment)){
                 // user loses if he enters a meaningful word
                 win = 1;
         }
         else{
+            Log.d("Where", "Computer not word");
             // try to find if such a word Fragment exists in a word in the dictionary
             // if word Fragment is empty the fill it with a random word (computers turn first)
-            String anyWordStartingWith = sDictionary.getAnyWordStartingWith(wordFragment);
+            String anyWordStartingWith = fDictionary.getAnyWordStartingWith(wordFragment);
 
             // if word Fragment doesn't exist then user is trying to fool the computer
             if(anyWordStartingWith == null){
@@ -181,8 +185,8 @@ public class GhostActivity extends AppCompatActivity {
                 int index = wordFragment.length();
                 wordFragment += Character.toString(anyWordStartingWith.charAt(index));
                 text.setText(wordFragment);
-//                Log.d("Turn", "In");
-//                Log.d("Word", anyWordStartingWith);
+                Log.d("Turn", "In");
+                Log.d("Word", anyWordStartingWith);
             }
         }
         Log.d("Turn", "Computer done");
@@ -221,7 +225,10 @@ public class GhostActivity extends AppCompatActivity {
             wordFragment += Character.toString(pressedKey);
             text.setText(wordFragment);
 
-//          Log.d("Turn", "Computer called");
+//            if(fDictionary.isWord("systematically")){
+//                Log.d("Trie", "true");
+//            }
+            Log.d("Turn", "Computer called");
             computerTurn();
 
 

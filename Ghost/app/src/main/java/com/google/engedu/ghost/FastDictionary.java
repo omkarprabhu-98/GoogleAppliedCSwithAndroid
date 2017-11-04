@@ -32,7 +32,7 @@ public class FastDictionary implements GhostDictionary {
         while((line = in.readLine()) != null) {
             String word = line.trim();
             if (word.length() >= MIN_WORD_LENGTH)
-                root.add(line.trim());
+                root.add(word);
         }
     }
     @Override
